@@ -1,0 +1,42 @@
+//BIT FINDING 
+/*
+  Cho dãy số a gồm n số nguyên dương và q truy vấn có 2 dạng:
+Truy vấn loại 1: Có dạng 1 i x, yêu cầu thay thế số thứ i trong dãy a thành số x (a[i] = x).
+Truy vấn loại 2: Có dạng 2 l r, yêu cầu in ra màn hình tổng của các số từ vị trí l đến vị trí r.
+*/
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 2e5 + 1;
+int n;
+ll a[maxn], bit[maxn];
+void update(int x, ll val){
+    for(; x <= n; x += x&(-x))
+        bit[x] += val;
+}
+ll get(int x){
+    ll val = 0;
+    for(; x; x -= x & (-x))
+        val += bit[x];
+    return val;
+}
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int q;
+    cin >> n >> q;
+    for(int i = 1; i <= n; ++i){
+        cin >> a[i];
+        update(i, a[i]);
+    }
+    int x, l, r;
+    while (q--){
+        cin >> x >> l >> r;
+        if(x & 1){
+            update(l, r - a[l]);
+            a[l] = r;
+        }else
+            cout << get(r) - get(l - 1) << "\n";
+    }
+    return 0;
+}
